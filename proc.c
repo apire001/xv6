@@ -301,7 +301,7 @@ new_wait(int* status)
         p->name[0] = 0;
         p->killed = 0;
         p->state = UNUSED;
-        status = p->&exitStatus;
+        *status = p->exitStatus;
         release(&ptable.lock);
         return pid;
       }

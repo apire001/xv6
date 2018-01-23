@@ -21,9 +21,21 @@ sys_exit(void)
 }
 
 int
+sys_new_exit(int status)
+{
+  return new_exit(status); //Syscall for new exit function
+}
+
+int
 sys_wait(void)
 {
   return wait();
+}
+
+int
+sys_new_wait(int* status)
+{
+  return new_wait(status); //Syscall for new wait function
 }
 
 int

@@ -38,7 +38,7 @@ int
 sys_new_wait(void)
 {
   int* status;
-  argptr(0, &status);
+  argptr(0, (char**)&status, sizeof(int*));
   return new_wait(status); //Syscall for new wait function
 }
 
@@ -49,7 +49,7 @@ sys_waitpid(void)
   int* status;
   int options;
   argint(0, &pid);
-  argptr(1, &status);
+  argptr(1, (char**)&status, sizeof(int*));
   argint(2, &options);
   return waitpid(pid, status, options); //Syscall for new waitpid function
 }

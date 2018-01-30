@@ -7,6 +7,7 @@ int exit(void) __attribute__((noreturn)); //parameter changed from void to int
 int new_exit(int) __attribute__((noreturn)); //new exit function
 int wait(void);
 int new_wait(int*);
+int waitpid(int, int*, int); //New waitpid function
 int pipe(int*);
 int write(int, void*, int);
 int read(int, void*, int);

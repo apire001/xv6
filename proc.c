@@ -301,7 +301,9 @@ new_wait(int* status)
         p->name[0] = 0;
         p->killed = 0;
         p->state = UNUSED;
-        *status = p->exitStatus;
+        if(status != NULL){
+          *status = p->exitStatus;
+        }
         release(&ptable.lock);
         return pid;
       }
@@ -322,6 +324,45 @@ int
 wait(void)
 {
   return new_wait(0); //Calls new wait function
+}
+
+int
+waitpid(int pid, int* status, int options)
+{
+ struct proc *p;
+ int exists = 0;
+ int havekids, pid1;
+ struct proc *curproc = myproc();
+
+ acquire(&ptable.lock);
+    for(;;){
+    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+      if(p->pid != pid)
+        continue;
+      exists = 1;
+      if(p->state == ZOMBIE){
+        pid1 = p->pid;
+        kfree(p->kstack);
+        p->kstack = 0;
+        freevm(p->pgdir);
+        p->pid = 0;
+        p->parent = 0;
+        p->name[0] = 0;
+        p->killed = 0;
+        p->state = UNUSED;
+        if(status != NULL){
+          *status = p->exitStatus;
+        }
+        release(&ptable.lock);
+        return pid1;
+      }
+    }
+    if(curproc->killed || !exists){
+      release(&ptable.lock);
+      return -1;
+    }
+    sleep(curproc, &ptable.lock);  //DOC: wait-sleep
+  }
 }
 
 //PAGEBREAK: 42

@@ -39,6 +39,12 @@ sys_new_wait(int* status)
 }
 
 int
+sys_waitpid(int pid, int* status, int options)
+{
+  return waitpid(pid, status, options); //Syscall for new waitpid function
+}
+
+int
 sys_kill(void)
 {
   int pid;

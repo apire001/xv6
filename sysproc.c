@@ -21,8 +21,10 @@ sys_exit(void)
 }
 
 int
-sys_new_exit(int status)
+sys_new_exit(void)
 {
+  int status;
+  argint(0, &status);
   return new_exit(status); //Syscall for new exit function
 }
 
@@ -33,14 +35,22 @@ sys_wait(void)
 }
 
 int
-sys_new_wait(int* status)
+sys_new_wait(void)
 {
+  int* status;
+  argptr(0, &status);
   return new_wait(status); //Syscall for new wait function
 }
 
 int
-sys_waitpid(int pid, int* status, int options)
+sys_waitpid(void)
 {
+  int pid;
+  int* status;
+  int options;
+  argint(0, &pid);
+  argptr(1, &status);
+  argint(2, &options);
   return waitpid(pid, status, options); //Syscall for new waitpid function
 }
 

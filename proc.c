@@ -301,7 +301,7 @@ new_wait(int* status)
         p->name[0] = 0;
         p->killed = 0;
         p->state = UNUSED;
-        if(status != NULL){
+        if(status != 0){
           *status = p->exitStatus;
         }
         release(&ptable.lock);
@@ -350,7 +350,7 @@ waitpid(int pid, int* status, int options)
         p->name[0] = 0;
         p->killed = 0;
         p->state = UNUSED;
-        if(status != NULL){
+        if(status != 0){
           *status = p->exitStatus;
         }
         release(&ptable.lock);

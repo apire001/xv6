@@ -25,7 +25,8 @@ sys_new_exit(void)
 {
   int status;
   argint(0, &status);
-  return new_exit(status); //Syscall for new exit function
+  new_exit(status); //Syscall for new exit function
+  return 0;
 }
 
 int

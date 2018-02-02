@@ -332,7 +332,7 @@ waitpid(int pid, int* status, int options)
  struct proc *p;
  int exists;
  int pid1;
- int exists = 0;
+ exists = 0;
  struct proc *curproc = myproc();
 
  acquire(&ptable.lock);

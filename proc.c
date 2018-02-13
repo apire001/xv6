@@ -375,16 +375,9 @@ waitpid(int pid, int* status, int options)
 //  - eventually that process transfers control
 //      via swtch back to the scheduler.
 
-void priority(struct proc *curproc, int setP){//priority set in range 0 to 31
-  if(setP > 31){
-    curproc->priority = 31;
-  }
-  else if(setP < 0){
-    curproc->priority = 0;
-  }
-  else{
-   curproc->priority = setP;
-  }
+void priority(int setP){//priority set in range 0 to 31
+  struct *curproc = myproc();
+  curproc-> priority = setP;
 }
 
 void
@@ -411,7 +404,7 @@ scheduler(void)
 		minP = p2->priority;
                 minproc = p2;
 	   }
-	   priority(p2, p2->priority - 1); //Better priority for waiting
+	   p2->priority = p2->priority - 1; //Better priority for waiting
 	}
         if(minproc->state != RUNNABLE)
         continue;
@@ -429,8 +422,8 @@ scheduler(void)
       switchkvm();
 
       // Process is done running for now.
-      if(c->proc->state != KILLED){
-	   priority(c->proc, c->proc->priority + 2);
+      if(c->proc->state != KILLED)
+	    c->proc->priority = c->proc->priority + 2;
 	}
       // It should have changed its p->state before coming back.
       c->proc = 0;

@@ -373,11 +373,21 @@ waitpid(int pid, int* status, int options)
 //  - swtch to start running that process
 //  - eventually that process transfers control
 //      via swtch back to the scheduler.
+
+void priority(int setP){
+   struct proc *curproc = myproc();
+   proc->priority = setP;
+}
+
 void
 scheduler(void)
 {
   struct proc *p;
   struct cpu *c = mycpu();
+  struct proc *holdProc;
+  	holdProc->priority = 101; //set to num above max to be modified later
+
+  
   c->proc = 0;
   
   for(;;){
@@ -387,17 +397,25 @@ scheduler(void)
     // Loop over process table looking for process to run.
     acquire(&ptable.lock);
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-      if(p->state != RUNNABLE)
+     	for(p2 = ptable.proc, p2 < &ptable.proc[NPROC]; p2++){
+	   if(holdProc->priority > p2->priority)
+	   {
+		holdProc = p2;
+	   }
+	}
+        if(holdProc->state != RUNNABLE)
         continue;
 
       // Switch to chosen process.  It is the process's job
       // to release ptable.lock and then reacquire it
       // before jumping back to us.
-      c->proc = p;
-      switchuvm(p);
-      p->state = RUNNING;
+    
 
-      swtch(&(c->scheduler), p->context);
+      c->proc = holdProc;
+      switchuvm(holdProc);
+      holdProc->state = RUNNING;
+
+      swtch(&(c->scheduler), holdProc->context);
       switchkvm();
 
       // Process is done running for now.
